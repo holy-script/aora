@@ -1,18 +1,20 @@
 import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
-import { Slot } from 'expo-router';
 
-const RootLayout = () => {
+const App = () => {
   return (
-    <Slot />
+    <View style={styles.container}>
+      <Text>Aora!</Text>
+    </View>
   );
 };
 
-export default RootLayout;
+export default App;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
   },
