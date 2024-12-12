@@ -8,12 +8,17 @@ export const config = {
     storageId: '6758f2f5003d60857430',
 };
 
+const { endpoint, platform, projectId, databaseId, userCollectionId, videoCollectionId, storageId } = config;
+
+import { Video } from '@/types';
 import { Account, AppwriteException, Avatars, Client, Databases, ID, Query } from 'react-native-appwrite';
 
 const client = new Client();
 
 client
-    .setEndpoint(config.endpoint).setPlatform(config.platform).setProject(config.projectId);
+    .setEndpoint(endpoint)
+    .setPlatform(platform)
+    .setProject(projectId);
 
 const account = new Account(client);
 const avatars = new Avatars(client);
@@ -41,8 +46,8 @@ export const createUser = async (
         await signIn(email, password);
 
         const newUser = await databases.createDocument(
-            config.databaseId,
-            config.userCollectionId,
+            databaseId,
+            userCollectionId,
             ID.unique(),
             {
                 accountId: newAccount.$id,
@@ -86,8 +91,8 @@ export const getCurrentUser = async () => {
         }
 
         const currentUser = await databases.listDocuments(
-            config.databaseId,
-            config.userCollectionId,
+            databaseId,
+            userCollectionId,
             [Query.equal('accountId', currentAccount.$id)]
         );
 
@@ -96,6 +101,25 @@ export const getCurrentUser = async () => {
         }
 
         return currentUser.documents[0];
+    }
+    catch (error) {
+        console.error(error as AppwriteException);
+        throw new Error((error as AppwriteException).message);
+    }
+};
+
+export const getAllPosts = async () => {
+    try {
+        const posts = await databases.listDocuments(
+            databaseId,
+            videoCollectionId,
+        );
+
+        if (!posts) {
+            throw new Error('Failed to get posts');
+        }
+
+        return posts.documents as Video[];
     }
     catch (error) {
         console.error(error as AppwriteException);
