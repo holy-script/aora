@@ -1,6 +1,6 @@
 import { Models } from "react-native-appwrite";
 
-export interface Video extends Models.Document {
+export interface VideoData extends Models.Document {
     title: string;
     thumbnail: string;
     video: string;

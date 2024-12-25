@@ -10,7 +10,7 @@ export const config = {
 
 const { endpoint, platform, projectId, databaseId, userCollectionId, videoCollectionId, storageId } = config;
 
-import { Video } from '@/types';
+import { VideoData } from '@/types';
 import { Account, AppwriteException, Avatars, Client, Databases, ID, Query } from 'react-native-appwrite';
 
 const client = new Client();
@@ -84,8 +84,6 @@ export const getCurrentUser = async () => {
     try {
         const currentAccount = await account.get();
 
-        console.log(currentAccount);
-
         if (!currentAccount) {
             throw new Error('Failed to get logged in user');
         }
@@ -119,7 +117,30 @@ export const getAllPosts = async () => {
             throw new Error('Failed to get posts');
         }
 
-        return posts.documents as Video[];
+        return posts.documents as VideoData[];
+    }
+    catch (error) {
+        console.error(error as AppwriteException);
+        throw new Error((error as AppwriteException).message);
+    }
+};
+
+export const getLatestPosts = async () => {
+    try {
+        const posts = await databases.listDocuments(
+            databaseId,
+            videoCollectionId,
+            [
+                Query.orderDesc('$createdAt'),
+                Query.limit(7)
+            ]
+        );
+
+        if (!posts) {
+            throw new Error('Failed to get posts');
+        }
+
+        return posts.documents as VideoData[];
     }
     catch (error) {
         console.error(error as AppwriteException);

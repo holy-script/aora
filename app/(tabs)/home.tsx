@@ -6,13 +6,14 @@ import SearchInput from '@/components/SearchInput';
 import Trending from '@/components/Trending';
 import EmptyState from '@/components/EmptyState';
 import useAppwrite from '@/hooks/useAppwrite';
-import { getAllPosts } from '@/lib/appwrite';
+import { getAllPosts, getLatestPosts } from '@/lib/appwrite';
 import VideoCard from '@/components/VideoCard';
-import { Video } from '@/types';
+import { VideoData } from '@/types';
 
 const Home = () => {
   const [refreshing, setRefreshing] = useState(false);
-  const { data: posts, refetch, isLoading } = useAppwrite<Video>(getAllPosts);
+  const { data: posts, refetch, isLoading } = useAppwrite<VideoData>(getAllPosts);
+  const { data: latestPosts } = useAppwrite<VideoData>(getLatestPosts);
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -61,7 +62,7 @@ const Home = () => {
               </Text>
 
               <Trending
-                posts={[{ id: 1 }, { id: 2 }, { id: 3 }]}
+                videos={latestPosts}
               />
             </View>
           </View>

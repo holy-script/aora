@@ -24,7 +24,6 @@ const SignIn = () => {
     setIsSubmitting(true);
 
     try {
-      console.log('Creating user...');
       await signIn(
         form.email,
         form.password,

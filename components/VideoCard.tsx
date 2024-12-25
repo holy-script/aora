@@ -1,22 +1,30 @@
 import { View, Text, Image, TouchableOpacity } from 'react-native';
-import React, { useState } from 'react';
-import { Video } from '@/types';
+import React from 'react';
+import { VideoData } from '@/types';
 import { icons } from '@/constants';
+import { useVideoPlayer, VideoView } from 'expo-video';
+import { useEvent, useEventListener } from 'expo';
 
 interface VideoCardProps {
-  video: Video;
+  video: VideoData;
 }
 
 const VideoCard = (
   { video:
     {
       title,
+      video,
       thumbnail,
       creator: { username, avatar }
     }
   }: VideoCardProps
 ) => {
-  const [play, setPlay] = useState(false);
+  const player = useVideoPlayer(video);
+  const { isPlaying } = useEvent(player, 'playingChange', { isPlaying: player.playing });
+  useEventListener(player, 'playToEnd', () => {
+    player.replay();
+    player.pause();
+  });
 
   return (
     <View className='flex-col items-center px-4 mb-14'>
@@ -55,13 +63,21 @@ const VideoCard = (
         </View>
       </View>
 
-      {play ? (
-        <Text className='text-white'>Playing</Text>
+      {isPlaying ? (
+        <VideoView player={player} style={{
+          width: '100%',
+          height: 210,
+          borderRadius: 10.5,
+          marginTop: 10.5,
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: 'white',
+        }} />
       ) : (
         <TouchableOpacity
           className='w-full h-60 rounded-xl mt-3 relative justify-center items-center'
           activeOpacity={0.7}
-          onPress={() => setPlay(true)}
+          onPress={() => player.play()}
         >
           <Image
             source={{ uri: thumbnail }}
