@@ -1,4 +1,4 @@
-import * as DocumentPicker from "expo-document-picker";
+import * as ImagePicker from "expo-image-picker";
 import { Models } from "react-native-appwrite";
 
 export interface VideoData extends Models.Document {
@@ -13,7 +13,7 @@ export interface VideoData extends Models.Document {
 
 export interface VideoForm {
     title: string,
-    video: DocumentPicker.DocumentPickerAsset | null,
-    thumbnail: DocumentPicker.DocumentPickerAsset | null,
+    video: ImagePicker.ImagePickerAsset | null,
+    thumbnail: ImagePicker.ImagePickerAsset | null,
     prompt: string;
 }

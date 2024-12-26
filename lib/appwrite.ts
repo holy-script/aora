@@ -11,7 +11,7 @@ export const config = {
 const { endpoint, platform, projectId, databaseId, userCollectionId, videoCollectionId, storageId } = config;
 
 import { VideoData, VideoForm } from '@/types';
-import * as DocumentPicker from 'expo-document-picker';
+import * as ImagePicker from 'expo-image-picker';
 import { Account, AppwriteException, Avatars, Client, Databases, ID, ImageGravity, Query, Storage } from 'react-native-appwrite';
 
 const client = new Client();
@@ -235,20 +235,20 @@ export const getFilePreview = async (fileId: string, type: 'image' | 'video') =>
     }
 };
 
-export const uploadFile = async (file: DocumentPicker.DocumentPickerAsset, type: 'image' | 'video') => {
+export const uploadFile = async (file: ImagePicker.ImagePickerAsset, type: 'image' | 'video') => {
     if (!file) {
         throw new Error('No file selected');
     }
 
-    if (!file.mimeType || !file.size) {
+    if (!file.mimeType || !file.fileSize || !file.uri || !file.fileName) {
         throw new Error('Invalid file');
     }
 
-    const { mimeType, size, ...rest } = file;
+    const { mimeType, fileSize, fileName, ...rest } = file;
     const asset = {
-        name: rest.name,
+        name: fileName,
         type: mimeType,
-        size: size,
+        size: fileSize,
         uri: rest.uri,
     };
 

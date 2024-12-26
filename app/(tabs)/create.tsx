@@ -6,6 +6,7 @@ import { useVideoPlayer, VideoView } from 'expo-video';
 import { icons } from '@/constants';
 import CustomButton from '@/components/CustomButton';
 import * as DocumentPicker from 'expo-document-picker';
+import * as ImagePicker from 'expo-image-picker';
 import { router } from 'expo-router';
 import { VideoForm } from '@/types';
 import { createVideo } from '@/lib/appwrite';
@@ -27,10 +28,10 @@ const Create = () => {
   }
 
   const openPicker = async (selectType: 'video' | 'image') => {
-    const result = await DocumentPicker.getDocumentAsync({
-      type: selectType === 'image'
-        ? ['image/png', 'image/jpg', 'image/jpeg']
-        : ['video/mp4', 'video/gif']
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: [selectType === 'video' ? 'videos' : 'images'],
+      aspect: [4, 3],
+      quality: 1,
     });
 
     if (!result.canceled) {
