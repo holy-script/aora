@@ -147,3 +147,23 @@ export const getLatestPosts = async () => {
         throw new Error((error as AppwriteException).message);
     }
 };
+
+export const searchPosts = async (query: string) => {
+    try {
+        const posts = await databases.listDocuments(
+            databaseId,
+            videoCollectionId,
+            [Query.search('title', query)]
+        );
+
+        if (!posts) {
+            throw new Error('Failed to get posts');
+        }
+
+        return posts.documents as VideoData[];
+    }
+    catch (error) {
+        console.error(error as AppwriteException);
+        throw new Error((error as AppwriteException).message);
+    }
+};
