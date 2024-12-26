@@ -167,3 +167,32 @@ export const searchPosts = async (query: string) => {
         throw new Error((error as AppwriteException).message);
     }
 };
+
+export const getUserPosts = async (userId: string) => {
+    try {
+        const posts = await databases.listDocuments(
+            databaseId,
+            videoCollectionId,
+            [Query.equal('creator', userId)]
+        );
+
+        if (!posts) {
+            throw new Error('Failed to get posts');
+        }
+
+        return posts.documents as VideoData[];
+    }
+    catch (error) {
+        console.error(error as AppwriteException);
+        throw new Error((error as AppwriteException).message);
+    }
+};
+
+export const signOut = async () => {
+    try {
+        const session = await account.deleteSession('current');
+    } catch (error) {
+        console.error(error as AppwriteException);
+        throw new Error((error as AppwriteException).message);
+    }
+};

@@ -9,8 +9,10 @@ import useAppwrite from '@/hooks/useAppwrite';
 import { getAllPosts, getLatestPosts } from '@/lib/appwrite';
 import VideoCard from '@/components/VideoCard';
 import { VideoData } from '@/types';
+import { useGlobalContext } from '@/context/GlobalProvider';
 
 const Home = () => {
+  const { user } = useGlobalContext();
   const [refreshing, setRefreshing] = useState(false);
   const { data: posts, refetch, isLoading } = useAppwrite<VideoData>(getAllPosts);
   const { data: latestPosts } = useAppwrite<VideoData>(getLatestPosts);
@@ -34,10 +36,10 @@ const Home = () => {
             <View className='justify-between items-start flex-row mb-6'>
               <View>
                 <Text className='font-pmedium text-sm text-gray-100'>
-                  Welcome Back
+                  Welcome Back,
                 </Text>
                 <Text className='text-2xl font-psemibold text-white'>
-                  JSMastery
+                  {user?.username}
                 </Text>
               </View>
 
@@ -52,8 +54,6 @@ const Home = () => {
 
             <SearchInput
               placeholder='Search for a video topic'
-              value=''
-              handleChangeText={() => { }}
             />
 
             <View className='w-full flex-1 pt-5 pb-8'>
